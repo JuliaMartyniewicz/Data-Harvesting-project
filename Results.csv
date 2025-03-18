@@ -1,0 +1,133 @@
+"Ward_Number","City","Ward_Name","Candidate","Party","Turnout"
+1,"Dundee","Strathmartine ","John Alexander","Scottish National Party (SNP)",40.1
+1,"Dundee","Strathmartine ","Daniel Coleman","Liberal Democrat Focus Team",40.1
+1,"Dundee","Strathmartine ","Stewart Hunter","Scottish National Party (SNP)",40.1
+1,"Dundee","Strathmartine ","Kevin Keenan","Scottish Labour Party",40.1
+2,"Dundee","Lochee ","Charlie Malone","Scottish Labour Party",40.4
+2,"Dundee","Lochee ","Wendy Scullin","Scottish Labour Party",40.4
+2,"Dundee","Lochee ","Roisin Smith","Scottish National Party (SNP)",40.4
+2,"Dundee","Lochee ","Siobhan Tolland","Scottish National Party (SNP)",40.4
+3,"Dundee","West End ","Bill Campbell","Scottish National Party (SNP)",39.9
+3,"Dundee","West End ","Michael Crichton","Liberal Democrat Focus Team",39.9
+3,"Dundee","West End ","Nadia El-Nakla","Scottish National Party (SNP)",39.9
+3,"Dundee","West End ","Fraser Macpherson","Liberal Democrat Focus Team",39.9
+4,"Dundee","Coldside ","Heather Anderson","Scottish National Party (SNP)",39.1
+4,"Dundee","Coldside ","Mark Flynn","Scottish National Party (SNP)",39.1
+4,"Dundee","Coldside ","George McIrvine","Scottish Labour Party",39.1
+4,"Dundee","Coldside ","Helen Wright","Scottish Labour Party",39.1
+5,"Dundee","Maryfield ","Georgia Cruickshank","Scottish Labour Party",33.9
+5,"Dundee","Maryfield ","Ken Lynn","Scottish National Party (SNP)",33.9
+5,"Dundee","Maryfield ","Lynne Short","Scottish National Party (SNP)",33.9
+6,"Dundee","North East ","Jax Finnegan","Scottish Labour Party",32.9
+6,"Dundee","North East ","Steven Rome","Scottish National Party (SNP)",32.9
+6,"Dundee","North East ","Willie Sawers","Scottish National Party (SNP)",32.9
+7,"Dundee","East End ","Will Dawson","Scottish National Party (SNP)",35.2
+7,"Dundee","East End ","Dorothy McHugh","Scottish Labour Party",35.2
+7,"Dundee","East End ","Christina Roberts","Scottish National Party (SNP)",35.2
+8,"Dundee","The Ferry ","Kevin Cordell","Scottish National Party (SNP)",56.3
+8,"Dundee","The Ferry ","Craig Duncan","Liberal Democrat Focus Team",56.3
+8,"Dundee","The Ferry ","Derek Scott","Scottish Conservative and Unionist",56.3
+8,"Dundee","The Ferry ","Pete Shears","Scottish Labour Party",56.3
+1,"Edinburgh","Almond","Kevin Lang","Scottish Liberal Democrats",51.1
+1,"Edinburgh","Almond","Norrie Work","Scottish National Party (SNP)",51.1
+1,"Edinburgh","Almond","Louise Young","Scottish Liberal Democrats",51.1
+1,"Edinburgh","Almond","Lewis James Younie","Scottish Liberal Democrats",51.1
+2,"Edinburgh","Pentland Hills","Graeme Bruce","Scottish Conservative and Unionist",46.3
+2,"Edinburgh","Pentland Hills","Neil Thomas Gardiner","Scottish National Party (SNP)",46.3
+2,"Edinburgh","Pentland Hills","Fiona Glasgow","Scottish National Party (SNP)",46.3
+2,"Edinburgh","Pentland Hills","Stephen Philip Jenkinson","Scottish Labour Party",46.3
+3,"Edinburgh","Drum Brae / Gyle","Robert Christopher Aldridge","Scottish Liberal Democrats",50.8
+3,"Edinburgh","Drum Brae / Gyle","Euan Hyslop","Scottish National Party (SNP)",50.8
+3,"Edinburgh","Drum Brae / Gyle","Edward John Thornley","Scottish Liberal Democrats",50.8
+4,"Edinburgh","Forth","Cammy Day","Labour and Co-operative Party",43
+4,"Edinburgh","Forth","Dijkstra","Scottish Liberal Democrats",43
+4,"Edinburgh","Forth","Stuart Dobbin","Scottish National Party (SNP)",43
+4,"Edinburgh","Forth","Kayleigh O'neill","Scottish Green Party",43
+5,"Edinburgh","Inverleith","Jule Bandel","Scottish Green Party",55
+5,"Edinburgh","Inverleith","Max Mitchell","Scottish Conservative and Unionist",55
+5,"Edinburgh","Inverleith","Vicky Nicolson","Scottish National Party (SNP)",55
+5,"Edinburgh","Inverleith","Hal Osler","Scottish Liberal Democrats",55
+6,"Edinburgh","Corstorphine / Murrayfield","Alan Christopher Beal","Scottish Liberal Democrats",58.8
+6,"Edinburgh","Corstorphine / Murrayfield","Euan Robert Davidson","Scottish Liberal Democrats",58.8
+6,"Edinburgh","Corstorphine / Murrayfield","Frank Ross","Scottish National Party (SNP)",58.8
+7,"Edinburgh","Sighthill / Gorgie","Denis Dixon","Scottish National Party (SNP)",35.9
+7,"Edinburgh","Sighthill / Gorgie","Catherine Fullerton","Scottish National Party (SNP)",35.9
+7,"Edinburgh","Sighthill / Gorgie","Dan Heap","Scottish Green Party",35.9
+7,"Edinburgh","Sighthill / Gorgie","Ross Mckenzie","Scottish Labour Party",35.9
+8,"Edinburgh","Colinton / Fairmilehead","Scott Arthur","Scottish Labour Party",59.3
+8,"Edinburgh","Colinton / Fairmilehead","Marco Biagi","Scottish National Party (SNP)",59.3
+8,"Edinburgh","Colinton / Fairmilehead","Jason Rust","Scottish Conservative and Unionist",59.3
+9,"Edinburgh","Fountainbridge / Craiglockhart","Christopher Cowdy","Scottish Conservative and Unionist",49.8
+9,"Edinburgh","Fountainbridge / Craiglockhart","David Key","Scottish National Party (SNP)",49.8
+9,"Edinburgh","Fountainbridge / Craiglockhart","Val Walker","Labour and Co-operative Party",49.8
+10,"Edinburgh","Morningside","Marie Munro","Scottish Conservative and Unionist",54
+10,"Edinburgh","Morningside","Ben Parker","Scottish Green Party",54
+10,"Edinburgh","Morningside","Neil John Ross","Scottish Liberal Democrats",54
+10,"Edinburgh","Morningside","Mandy Watt","Scottish Labour Party",54
+11,"Edinburgh","City Centre","Margaret Arma Graham","Labour and Co-operative Party",38
+11,"Edinburgh","City Centre","Finlay Mcfarlane","Scottish National Party (SNP)",38
+11,"Edinburgh","City Centre","Claire Miller","Scottish Green Party",38
+11,"Edinburgh","City Centre","Jo Mowat","Scottish Conservative and Unionist",38
+12,"Edinburgh","Leith Walk","Jack Caldwell","Scottish Liberal Democrats",41.7
+12,"Edinburgh","Leith Walk","James Dalgleish","Labour and Co-operative Party",41.7
+12,"Edinburgh","Leith Walk","Mcneese","Scottish National Party (SNP)",41.7
+12,"Edinburgh","Leith Walk","Susan Rae","Scottish Green Party",41.7
+13,"Edinburgh","Leith","Chas Booth","Scottish Green Party",44
+13,"Edinburgh","Leith","Katrina Faccenda","Scottish Labour Party",44
+13,"Edinburgh","Leith","Adam Mcvey","Scottish National Party (SNP)",44
+14,"Edinburgh","Craigentinny / Duddingston","Danny Aston","Scottish National Party (SNP)",44.2
+14,"Edinburgh","Craigentinny / Duddingston","Joan Griffiths","Labour and Co-operative Party",44.2
+14,"Edinburgh","Craigentinny / Duddingston","Alex Staniforth","Scottish Green Party",44.2
+14,"Edinburgh","Craigentinny / Duddingston","Iain Whyte","Scottish Conservative and Unionist",44.2
+15,"Edinburgh","Southside / Newington","Steve Burgess","Scottish Green Party",49.2
+15,"Edinburgh","Southside / Newington","Pauline Flannery","Scottish Liberal Democrats",49.2
+15,"Edinburgh","Southside / Newington","Simita Kumar","Scottish National Party (SNP)",49.2
+15,"Edinburgh","Southside / Newington","Tim Pogson","Labour and Co-operative Party",49.2
+16,"Edinburgh","Liberton / Gilmerton","Lezley Marion Cameron","Labour and Co-operative Party",43.7
+16,"Edinburgh","Liberton / Gilmerton","Philip Doggart","Scottish Conservative and Unionist",43.7
+16,"Edinburgh","Liberton / Gilmerton","Lesley Macinnes","Scottish National Party (SNP)",43.7
+16,"Edinburgh","Liberton / Gilmerton","Martha Mattos Coelho","Scottish National Party (SNP)",43.7
+17,"Edinburgh","Portobello / Craigmillar","Kate Campbell","Scottish National Party (SNP)",43.7
+17,"Edinburgh","Portobello / Craigmillar","Tim Jones","Scottish Conservative and Unionist",43.7
+17,"Edinburgh","Portobello / Craigmillar","Jane Elizabeth Meagher","Labour and Co-operative Party",43.7
+17,"Edinburgh","Portobello / Craigmillar","Alys Mumford","Scottish Green Party",43.7
+1,"Perth","Carse of Gowrie","Alasdair Bailey","Scottish Labour Party",56.6
+1,"Perth","Carse of Gowrie","Angus Forbes","Scottish Conservative and Unionist",56.6
+1,"Perth","Carse of Gowrie","Ken Harvey","Scottish National Party (SNP)",56.6
+2,"Perth","Strathmore","Hugh Anderson","Scottish Conservative and Unionist",54.7
+2,"Perth","Strathmore","Colin Stewart","Independent",54.7
+2,"Perth","Strathmore","Grant Stewart","Scottish National Party (SNP)",54.7
+2,"Perth","Strathmore","Jack Welch","Scottish National Party (SNP)",54.7
+3,"Perth","Blairgowrie & Glens","Bob Brawn","Scottish Conservative and Unionist",52.2
+3,"Perth","Blairgowrie & Glens","Tom McEwen","Scottish National Party (SNP)",52.2
+3,"Perth","Blairgowrie & Glens","Caroline Shiers","Scottish Conservative and Unionist",52.2
+4,"Perth","Highland","John Duff","Scottish Conservative and Unionist",58.8
+4,"Perth","Highland","Xander McDade","Independent",58.8
+4,"Perth","Highland","Michael Williamson","Scottish National Party (SNP)",58.8
+5,"Perth","Strathtay","Ian James","Scottish Conservative and Unionist",53.3
+5,"Perth","Strathtay","Grant Laing","Scottish National Party (SNP)",53.3
+5,"Perth","Strathtay","Claire McLaren","Scottish Liberal Democrats",53.3
+6,"Perth","Strathearn","Rhona Brock","Independent",52.4
+6,"Perth","Strathearn","Stewart Donaldson","Scottish National Party (SNP)",52.4
+6,"Perth","Strathearn","Noah Khogali","Scottish Conservative and Unionist",52.4
+7,"Perth","Strathallan","Keith Allen","Scottish Conservative and Unionist",51.5
+7,"Perth","Strathallan","Steven Carr","Scottish National Party (SNP)",51.5
+7,"Perth","Strathallan","Crawford Reid","Scottish Conservative and Unionist",51.5
+8,"Perth","Kinross-shire","Dave Cuthbert","Independent",55.1
+8,"Perth","Kinross-shire","Neil Freshwater","Scottish Conservative and Unionist",55.1
+8,"Perth","Kinross-shire","Willie Robertson","Scottish Liberal Democrats",55.1
+8,"Perth","Kinross-shire","Richard Watters","Scottish National Party (SNP)",55.1
+9,"Perth","Almond & Earn","Michelle Frampton","Scottish National Party (SNP)",50.2
+9,"Perth","Almond & Earn","David Illingworth","Scottish Conservative and Unionist",50.2
+9,"Perth","Almond & Earn","Frank Smith","Scottish Conservative and Unionist",50.2
+10,"Perth","Perth City South","Liz Barrett","Scottish Liberal Democrats",51.6
+10,"Perth","Perth City South","Andy Chan","Scottish Conservative and Unionist",51.6
+10,"Perth","Perth City South","Iain Macpherson","Scottish National Party (SNP)",51.6
+10,"Perth","Perth City South","Sheila McCole","Scottish National Party (SNP)",51.6
+11,"Perth","Perth City North","Brian Leishman","Scottish Labour Party",39.3
+11,"Perth","Perth City North","Ian Massie","Scottish National Party (SNP)",39.3
+11,"Perth","Perth City North","John Rebbeck","Scottish National Party (SNP)",39.3
+12,"Perth","Perth City Centre","Chris Ahern","Scottish Conservative and Unionist",41.8
+12,"Perth","Perth City Centre","Peter Anthony Barrett","Scottish Liberal Democrats",41.8
+12,"Perth","Perth City Centre","Eric Drysdale","Scottish National Party (SNP)",41.8
+12,"Perth","Perth City Centre","Andrew Parrott","Scottish National Party (SNP)",41.8

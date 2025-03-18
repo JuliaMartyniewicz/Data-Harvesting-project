@@ -1,0 +1,567 @@
+---
+title: "web scraping project"
+author: "Julia Martyniewicz"
+date: "2025-03-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(rvest)
+library(httr)
+library(xml2)
+library(stringr)
+library(tidyverse)
+```
+
+DUNDEEE
+
+```{r}
+url <- "https://www.dundeecity.gov.uk/local-elections-2022/local-elections-2022-results"
+webpage <- read_html(url)
+```
+
+```{r}
+# Extract titles
+
+titles <- webpage |> 
+  html_nodes(xpath = "//strong") |> 
+  html_text()
+
+# Eliminate the first and second titles, since they do not match any table
+titles <- titles[-c(1, 2)]
+
+
+print(titles)
+```
+
+
+```{r}
+# Extract the tables
+
+tables <- webpage |> 
+  html_nodes(xpath = "//table") |> 
+  html_table(fill = TRUE)
+
+tables <- tables[-1]
+
+
+print(tables)
+
+
+```
+
+```{r}
+# Combine titles and tables
+
+election_combined <- setNames(tables, titles)
+
+print(election_combined)
+```
+
+
+```{r}
+
+wards_clean <- str_extract(titles, "Ward \\d+ - [^(]+")
+num_candidates <- str_extract(titles, "\\d+(?=\\))")
+
+info_wards <- webpage |> 
+  html_nodes(xpath = "//table/following-sibling::p") |> 
+  html_text()
+
+print(info_wards)
+
+```
+
+
+```{r}
+electorate_num <- str_extract(info_wards, "(?<=The electorate for the ward is )[\\d,]+") %>%
+  str_replace_all(",", "") |>   # Eliminar comas
+  as.numeric()
+
+percentage_poll <- str_extract(info_wards, "(?<=The percentage poll was )\\d+\\.\\d+") |> 
+  as.numeric()
+
+valid_data <- !is.na(electorate_num) & !is.na(percentage_poll)
+
+electorate_num <- electorate_num[valid_data]
+percentage_poll <- percentage_poll[valid_data]
+
+print(electorate_num)
+print(percentage_poll)
+
+
+```
+
+```{r}
+election_final <- bind_rows(
+  mapply(function(tbl, ward, candidates, electorate, percentage) {
+    tbl$ward <- ward
+    tbl$num_candidates <- as.numeric(candidates)
+    tbl$electorate_number <- as.numeric(electorate)
+    tbl$percentage_poll <- as.numeric(percentage)
+    return(tbl)
+  }, tables, wards_clean, num_candidates, electorate_num, percentage_poll, SIMPLIFY = FALSE)
+)
+
+election_final <- election_final |> 
+  select(ward, num_candidates, everything())
+
+
+print(election_final)
+```
+```{r}
+# Cleaning the table
+
+# Filter out rows with empty strings or "-"
+election_final <- election_final %>%
+  filter(`Electedat Stage` != "" & `Electedat Stage` != "-")
+
+print(election_final)
+```
+```{r}
+# Separate column ward
+
+# Split the "ward" column into "ward_number" and "ward_name"
+election_final <- election_final %>%
+  separate(ward, into = c("ward_number", "ward_name"), sep = " - ")
+
+print(election_final)
+```
+```{r}
+library(tidyr)
+
+# Unite "Surname" and "Other Names" into a new column "Full_Name"
+election_final <- election_final %>%
+  unite(Full_Name, `Surname`, `Other Names`, sep = " ")
+
+# Change the name of the column "Description"
+election_final <- election_final |>
+  rename(Party = Description)
+
+# Deleting the word "Ward" from the column ward_number and saving it as numeric
+election_final <- election_final |>
+  mutate(ward_number = as.numeric(str_trim(str_replace_all(ward_number, "Ward ", ""))))
+
+# Change the order of words in column Full_Name
+election_final <- election_final %>%
+  mutate(Full_Name = sapply(str_split(Full_Name, " "), function(x) str_c(rev(x), collapse = " ")))
+
+head(election_final)
+```
+
+
+EDINBURGH
+
+```{r}
+# 1. Main Page URL
+main_url <- "https://www.edinburgh.gov.uk/election-results/local-government-elections-2022-results"
+```
+
+```{r}
+# 2. Read the HTML
+main_page <- read_html(main_url)
+```
+
+```{r}
+# 3. Extract Ward Sections
+#   Find all the <h3> elements.  Each <h3> is the start of a ward's section.
+ward_headers <- main_page %>% html_nodes("h3")
+```
+
+```{r}
+# Function to Extract Data for a Single Ward
+extract_ward_data <- function(ward_header) {
+  # Extract ward number and name
+  ward_text <- ward_header %>% html_text()
+  ward_number <- str_extract(ward_text, "Ward\\s*(\\d+)") %>% str_remove("Ward ") %>% as.numeric()
+  ward_name <- str_extract(ward_text, "-\\s*(.*)") %>% str_remove("- ") %>% str_trim()
+
+  # Get the list of elected candidates
+  candidates_list <- ward_header %>%
+    html_element(xpath = "./following-sibling::p[1]/following-sibling::ul[1]") %>%
+    html_nodes("li") %>%
+    html_text()
+
+  # Improved regex to handle variations in candidate strings
+  candidates_data <- str_match(candidates_list, "^(.*?)\\s*-\\s*(.*?)\\s*elected at stage.*|^(.*?)\\s+(.*?)\\s*elected at stage.*")
+
+  # Create a dataframe for candidates
+  candidates <- data.frame(
+    Candidate = ifelse(is.na(candidates_data[, 2]), str_trim(candidates_data[, 4]), str_trim(candidates_data[, 2])), # Trim for clean output
+    Party = ifelse(is.na(candidates_data[, 3]), str_trim(candidates_data[, 5]), str_trim(candidates_data[, 3])) # Trim for clean output
+  )
+
+  # Get electorate, votes cast, and turnout
+  stats_paragraph <- ward_header %>%
+    html_element(xpath = "./following-sibling::p[2]") %>%
+    html_text()
+
+  # Print stats_paragraph for debugging
+  print(stats_paragraph)
+
+  # Extract the values using regular expressions
+  electorate <- str_extract(stats_paragraph, "Electorate: ([0-9,]+)") %>% str_remove_all("[^0-9]") %>% as.numeric()
+  votes_cast <- str_extract(stats_paragraph, "Votes cast:.*?([0-9,]+)") %>% str_remove_all("[^0-9]") %>% as.numeric()
+  
+  # Improved turnout extraction to handle both formats:
+  # 1. "Turnout: 51.1%"
+  # 2. "Turnout: % 50.8"
+  turnout <- str_extract(stats_paragraph, "Turnout:.*?(\\d+\\.?\\d*)\\s*%")  # Case 1: Number before %
+  if (is.na(turnout)) {
+    turnout <- str_extract(stats_paragraph, "Turnout:.*?%\\s*(\\d+\\.?\\d*)")  # Case 2: Number after %
+  }
+  turnout <- str_extract(turnout, "\\d+\\.?\\d*")  # Extract only the numeric part
+  turnout <- as.numeric(turnout)  # Convert to numeric
+
+  # Replicate ward data for each candidate
+  ward_data <- data.frame(
+    Ward_Number = rep(ward_number, nrow(candidates)), # Added Ward Number
+    Ward = rep(ward_name, nrow(candidates)),  # Added Ward name
+    Electorate = rep(electorate, nrow(candidates)),
+    Votes_Cast = rep(votes_cast, nrow(candidates)),
+    Turnout = rep(turnout, nrow(candidates))
+  )
+
+  # Combine candidate data with ward data
+  ward_data <- cbind(ward_data, candidates)
+
+  return(ward_data)
+}
+```
+
+```{r}
+# 5. Apply the Function to Each Ward Header
+all_ward_data <- lapply(ward_headers, extract_ward_data)
+```
+
+```{r}
+# 6. Combine All Ward Data into a Single Data Frame
+final_results_E <- bind_rows(all_ward_data)
+```
+
+```{r}
+# 7. Clean up
+final_results_E <- final_results_E %>%
+  mutate(across(where(is.character), str_trim))  # Trim whitespace
+
+# Print the first few rows of the final result
+print(head(final_results_E))
+```
+```{r}
+# Change the order of words in "Candidate" and no capital letters in surname
+final_results_E <- final_results_E %>%
+  mutate(Candidate = sapply(str_split(Candidate, ", "), function(x) str_to_title(str_c(rev(x), collapse = " "))))
+```
+
+
+PERTH
+
+```{r}
+# Load necessary libraries
+library(rvest)
+library(dplyr)
+library(stringr)
+
+# Define the URL
+url <- "https://www.pkc.gov.uk/article/22625/Local-Government-Election-Results-in-2022"
+
+# Read the webpage
+webpage <- read_html(url)
+
+# Extract all tables with the class 'borchestergenericgeneral'
+tables <- webpage %>%
+  html_nodes("table.borchestergenericgeneral") %>%
+  html_table(fill = TRUE)
+
+# Extract ward names
+ward_names <- webpage %>%
+  html_nodes("h3") %>%
+  html_text()
+
+# Extract percentage turnouts
+turnouts_text <- webpage %>%
+  html_nodes("p") %>%
+  html_text()
+
+# Extract the percentage turnout values
+turnouts <- str_extract(turnouts_text, "Percentage turnout[:\\s]*\\d+\\.\\d+[%]?") %>%
+  str_remove_all("Percentage turnout[:\\s]*") %>%
+  str_remove_all("%") %>%
+  as.numeric()
+turnouts <- turnouts[!is.na(turnouts)]  # Remove NAs from the turnouts vector
+
+# Initialize an empty list to store the results
+results <- list()
+
+# Loop through each table
+for (i in seq_along(tables)) {
+  table <- tables[[i]]
+  
+  # Clean the table: remove rows with "Candidate" or "Party" in the first column
+  table <- table %>%
+    filter(!str_detect(.[[1]], "Candidate|Party"))
+  
+  # Filter only elected candidates (rows with a valid "Elected at Stage Number")
+  elected_candidates <- table %>%
+    filter(!is.na(.[[4]]) & .[[4]] != "-")
+  
+  # Add ward name
+  ward_name <- ward_names[i]
+
+  # Find the corresponding turnout
+  turnout <- ifelse(i <= length(turnouts), turnouts[i], NA) # Check if there's a turnout value for the ward
+  
+  # Add ward name and turnout to the elected candidates data
+  elected_candidates <- elected_candidates %>%
+    mutate(WardName = ward_name,
+           PercentageTurnout = turnout) %>%
+    select(WardName, Candidate = 1, Party = 2, `Results (First Preference)` = 3, PercentageTurnout, `Elected at Stage Number` = 4)
+  
+  # Append to the results list
+  results[[i]] <- elected_candidates
+}
+
+# Combine all results into a single data frame
+final_results <- bind_rows(results)
+
+# Print the final results
+print(final_results)
+```
+
+
+```{r}
+# Load necessary libraries
+library(rvest)
+library(dplyr)
+library(stringr)
+library(tidyr) # Make sure tidyr is loaded
+
+# Define the URL
+url <- "https://www.pkc.gov.uk/article/22625/Local-Government-Election-Results-in-2022"
+
+# Read the webpage
+webpage <- read_html(url)
+
+# Extract all tables with the class 'borchestergenericgeneral'
+tables <- webpage %>%
+  html_nodes("table.borchestergenericgeneral") %>%
+  html_table(fill = TRUE)
+
+# Extract ward names
+ward_names <- webpage %>%
+  html_nodes("h3") %>%
+  html_text()
+
+# Extract percentage turnouts
+turnouts_text <- webpage %>%
+  html_nodes("p") %>%
+  html_text()
+
+# Extract the percentage turnout values
+turnouts <- str_extract(turnouts_text, "Percentage turnout[:\\s]*\\d+\\.\\d+[%]?") %>%
+  str_remove_all("Percentage turnout[:\\s]*") %>%
+  str_remove_all("%") %>%
+  as.numeric()
+turnouts <- turnouts[!is.na(turnouts)]  # Remove NAs from the turnouts vector
+
+# Initialize an empty list to store the results
+results <- list()
+
+# Loop through each table
+for (i in seq_along(tables)) {
+  table <- tables[[i]]
+  
+  # Clean the table: remove rows with "Candidate" or "Party" in the first column
+  table <- table %>%
+    filter(!str_detect(.[[1]], "Candidate|Party"))
+  
+  # Filter only elected candidates (rows with a valid "Elected at Stage Number")
+  elected_candidates <- table %>%
+    filter(!is.na(.[[4]]) & .[[4]] != "-")
+  
+  # Extract ward name
+  ward_name <- ward_names[i]
+
+  # Find the corresponding turnout
+  turnout <- ifelse(i <= length(turnouts), turnouts[i], NA) # Check if there's a turnout value for the ward
+  
+  # Add ward name and turnout to the elected candidates data
+  elected_candidates <- elected_candidates %>%
+    mutate(WardName = ward_name,
+           PercentageTurnout = turnout) %>%
+    select(WardName, Candidate = 1, Party = 2, `Results (First Preference)` = 3, PercentageTurnout, `Elected at Stage Number` = 4)
+  
+  # Append to the results list
+  results[[i]] <- elected_candidates
+}
+
+# Combine all results into a single data frame
+final_results <- bind_rows(results)
+
+# Split WardName in final_results
+final_results <- final_results %>%
+  separate(WardName, into = c("WardNumber", "WardName"), sep = " - ", remove = TRUE) %>%
+  mutate(WardNumber = str_remove(WardNumber, "Ward ")) %>%
+  select(WardNumber, WardName, everything()) # keep all columns, but reorder
+
+
+# Print the final results
+print(final_results)
+```
+
+JOINING TABLES
+
+```{r}
+# Adding new column city name to all 3 tables
+
+election_final$City <- "Dundee"
+final_results_E$City <- "Edinburgh"
+final_results$City <- "Perth"
+```
+
+```{r}
+# Renaming columns so that we can later join the tables
+head(election_final)
+colnames(election_final)
+
+election_final <- election_final |>
+  rename(
+    Ward_Number = ward_number,
+    Ward_Name = ward_name,
+    Candidate = Full_Name,
+    Turnout = percentage_poll
+  )
+
+head(final_results_E)
+
+final_results_E <- final_results_E |>
+  rename(
+    Ward_Name = Ward
+  )
+
+head(final_results)
+
+final_results <- final_results |>
+  rename(
+    Ward_Number = WardNumber,
+    Ward_Name = WardName,
+    Turnout = PercentageTurnout
+  )
+```
+
+```{r}
+str(election_final$Ward_Number)
+str(final_results_E$Ward_Number)
+str(final_results$Ward_Number)
+
+final_results$Ward_Number <- as.numeric(final_results$Ward_Number)
+
+combined_table <- bind_rows(election_final, final_results_E, final_results) |>
+  select(Ward_Number, City, Ward_Name, Candidate, Party, Turnout)
+
+
+combined_table$Party <- gsub("([a-z])([A-Z])", "\\1 \\2", combined_table$Party)
+
+head(combined_table)
+```
+
+```{r}
+# Clean the Party column by handling cases where there is a name before the hyphen or just a single name
+combined_table <- combined_table %>%
+  mutate(
+    Party = ifelse(str_detect(Party, "(,.*-| -)"),  # Check if there's a name before the hyphen or just one name
+                  str_trim(str_extract(Party, "(?<=-\\s).*")),  # Extract party name after the hyphen
+                  Party)  # Otherwise, leave it unchanged
+  )
+```
+
+```{r}
+# We also need to standardize/unify the party names
+
+# Standardize the Party names
+combined_table <- combined_table %>%
+  mutate(
+    Party = str_replace_all(Party, "Scottish National Pary", "Scottish National Party"),  # Fix misspelling
+    Party = str_replace_all(Party, "Labour and Co-Operative Party", "Labour and Co-operative Party"),  # Standardize spelling
+    Party = str_replace_all(Party, "Scottish National Party \\(SNP\\)", "Scottish National Party (SNP)"),  # Fix missing parentheses
+    Party = str_replace_all(Party, "Scottish National Party \\(SNP", "Scottish National Party (SNP)"),  # Fix missing closing parentheses
+    Party = str_replace_all(Party, "Scottish Conservative and Unionist Party", "Scottish Conservative and Unionist"),  # Remove 'Party' for consistency
+    Party = str_replace_all(Party, "Labour and Co-operative Party", "Labour and Co-operative Party"),  # Ensure consistency
+    Party = str_replace_all(Party, "Scottish Liberal Democrats", "Scottish Liberal Democrats"),  # No change, just for consistency
+    Party = str_replace_all(Party, "Liberal Democrat Focus Team", "Liberal Democrat Focus Team"),  # No change, just for consistency
+    Party = str_replace_all(Party, "Scottish Green Party", "Scottish Green Party"),  # No change, just for consistency
+    Party = str_replace_all(Party, "Independent", "Independent"),  # No change, just for consistency
+    Party = str_replace_all(Party, "\\(SNP\\)\\)", "(SNP)")  # Fix extra closing parenthesis
+  )
+
+# Check the unique party names after standardization
+unique(combined_table$Party)
+
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(combined_table, aes(x = City, fill = Party)) +
+  geom_bar() +
+  theme_minimal() +
+  labs(title = "Number of Candidates Elected by Party", x = "City", y = "Count")
+
+```
+
+```{r}
+library(ggplot2)
+
+# Enhanced plot
+ggplot(combined_table, aes(x = City, fill = Party)) +
+  geom_bar(position = "dodge", width = 0.7) +  # Use 'dodge' for side-by-side bars
+  scale_fill_brewer(palette = "Set3") +  # Use a color palette for better aesthetics
+  theme_minimal() +
+  labs(
+    title = "Number of Candidates Elected by Party",
+    subtitle = "Election Results Across Cities",
+    x = "City",
+    y = "Number of Candidates",
+    fill = "Political Party"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 12, color = "gray"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10)
+  ) +
+  coord_flip()  # Flip coordinates for a horizontal bar chart (improves readability)
+
+```
+
+```{r}
+# Save the combined_table as a CSV file
+write.csv(combined_table, "Results.csv", row.names = FALSE)
+```
+
