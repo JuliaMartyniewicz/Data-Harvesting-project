@@ -22,8 +22,7 @@ Clone the repository:
 
 Open R or RStudio and run the script.
 
-Use the R Markdown file (final project.Rmd)
-If you prefer another approach, download and open final project.Rmd in RStudio.
+Use the R Markdown file (final project.Rmd). If you prefer another approach, download and open final project.Rmd in RStudio.
 
 The scraper extracts election results from three cities:
 * Dundee: Extracts tables from the Dundee City Council website.
