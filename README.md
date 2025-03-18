@@ -28,7 +28,7 @@ If you prefer another approach, download and open final project.Rmd in RStudio.
 The scraper extracts election results from three cities:
 * Dundee: Extracts tables from the Dundee City Council website.
 * Edinburgh: Parses structured election data from the Edinburgh City Council page.
-* Perth: Scrapes election results and voter turnout from the Perth & Kinross website.
+* Perth: Scrapes election results and voter turnout from the Perth website.
 
 The results from all cities are merged into a single dataframe (combined_table).
 Visualizations are generated using ggplot2 to show the number of elected candidates per party.
