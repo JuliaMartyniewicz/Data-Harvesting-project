@@ -1,6 +1,6 @@
 ---
 title: "web scraping project"
-author: "Julia Martyniewicz"
+author: "Julia Martyniewicz" "Alba García Vega"
 date: "2025-03-06"
 output: html_document
 ---
