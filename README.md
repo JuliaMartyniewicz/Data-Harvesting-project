@@ -33,7 +33,7 @@ The scraper extracts election results from three cities:
 The results from all cities are merged into a single dataframe (combined_table).
 Visualizations are generated using ggplot2 to show the number of elected candidates per party.
 
-Example Output
+Output
 
 * Raw Extracted Tables
 * Cleaned & Merged Election Results
